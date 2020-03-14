@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Products{% endblock %}
+
+{% block body %}
+    <h1>Products</h1>
+
+    {# total items count #}
+    <div class="count">
+        {{ pagination.getTotalItemCount }}
+    </div>
+    <input type="text" id="search_name" placeholder="search name">
+    <table>
+        <tr>
+            {# sorting of properties based on query #}
+            <th{% if pagination.isSorted('p.name') %} class="sorted"{% endif %}>
+                {{ knp_pagination_sortable(pagination, 'Name', 'p.name') }}
+            </th>
+            <th{% if pagination.isSorted('p.name') %} class="sorted"{% endif %}>
+                {{ knp_pagination_sortable(pagination, 'Cost', 'p.cost') }}
+            </th>
+            <th>Create date</th>
+        </tr>
+
+        {# table body #}
+        {% for product in pagination %}
+            <tr {% if loop.index is odd %}class="color"{% endif %}>
+                <td>{{ product.name }}</td>
+                <td>{{ product.cost }}</td>
+                <td>{{ product.createdAt|date('Y-m-d H:i:s') }}</td>
+                <td>
+                    <a href="{{ path('product_show', {'id': product.id}) }}">show</a>
+                    <a href="{{ path('product_edit', {'id': product.id}) }}">edit</a>
+                    {{ include('product/_delete_form.html.twig') }}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+
+    <a href="{{ path('product_new') }}">Create new</a>
+{% endblock %}

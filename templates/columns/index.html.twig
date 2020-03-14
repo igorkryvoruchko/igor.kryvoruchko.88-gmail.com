@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Columns index{% endblock %}
+
+{% block body %}
+    <h1>Columns index</h1>
+
+    {# total items count #}
+    <div class="count">
+        {{ pagination.getTotalItemCount }}
+    </div>
+    <table>
+        <tr>
+            {# sorting of properties based on query components #}
+            <th>{{ knp_pagination_sortable(pagination, 'Id', 'c.id') }}</th>
+            <th{% if pagination.isSorted('c.name') %} class="sorted"{% endif %}>
+                {{ knp_pagination_sortable(pagination, 'Name', 'c.name') }}
+            </th>
+{#            <th{% if pagination.isSorted(['a.date', 'a.time']) %} class="sorted"{% endif %}>#}
+{#                {{ knp_pagination_sortable(pagination, 'Release', ['a.date', 'a.time']) }}#}
+{#            </th>#}
+        </tr>
+
+        {# table body #}
+        {% for column in pagination %}
+            <tr {% if loop.index is odd %}class="color"{% endif %}>
+                <td>{{ column.id }}</td>
+                <td>{{ column.name }}</td>
+                <td>
+                    <a href="{{ path('columns_show', {'id': column.id}) }}">show</a>
+                    <a href="{{ path('columns_edit', {'id': column.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+
+    <a href="{{ path('columns_new') }}">Create new</a>
+{% endblock %}
