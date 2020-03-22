@@ -27,6 +27,18 @@
                 <th>Color</th>
                 <td>{{ product.color }}</td>
             </tr>
+            {% for column in columns %}
+            <tr>
+                <th>{{ column.name }}</th>
+                <td>
+                    {% for additionalItem in additional %}
+                        {% if column.id == additionalItem.columnId %}
+                            {{ additionalItem.value }}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
         </tbody>
     </table>
 

@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -50,11 +52,17 @@ class Product
     protected $updatedAt;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\AdditionalFields", mappedBy="product", cascade={"all"})
+     */
+    private $additional;
+
+    /**
      * Product constructor.
      */
     public function __construct()
     {
         $this->setCreatedAt(new \DateTime());
+        $this->additional = new ArrayCollection();
     }
 
 
@@ -152,5 +160,36 @@ class Product
         if ($this->getCreatedAt() === null) {
             $this->setCreatedAt(new \DateTime('now'));
         }
+    }
+
+    /**
+     * @return Collection|AdditionalFields[]
+     */
+    public function getAdditional(): Collection
+    {
+        return $this->additional;
+    }
+
+    public function addAdditional(AdditionalFields $additional): self
+    {
+        if (!$this->additional->contains($additional)) {
+            $this->additional[] = $additional;
+            $additional->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAdditionalField(AdditionalFields $additionalField): self
+    {
+        if ($this->additionalField->contains($additionalField)) {
+            $this->additionalField->removeElement($additionalField);
+            // set the owning side to null (unless already changed)
+            if ($additionalField->getProduct() === $this) {
+                $additionalField->setProduct(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -3,6 +3,10 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\OneToMany;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AdditionalFieldsRepository")
@@ -19,11 +23,6 @@ class AdditionalFields
     /**
      * @ORM\Column(type="integer")
      */
-    private $product_id;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
     private $column_id;
 
     /**
@@ -31,21 +30,15 @@ class AdditionalFields
      */
     private $value;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Product", inversedBy="additional")
+     * @JoinColumn(name="product_id", referencedColumnName="id")
+     */
+    private $product;
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getProductId(): ?int
-    {
-        return $this->product_id;
-    }
-
-    public function setProductId(int $product_id): self
-    {
-        $this->product_id = $product_id;
-
-        return $this;
     }
 
     public function getColumnId(): ?int
@@ -68,6 +61,18 @@ class AdditionalFields
     public function setValue(?string $value): self
     {
         $this->value = $value;
+
+        return $this;
+    }
+
+    public function getProduct(): ?Product
+    {
+        return $this->product;
+    }
+
+    public function setProduct(?Product $product): self
+    {
+        $this->product = $product;
 
         return $this;
     }
