@@ -101,6 +101,9 @@ class ProductController extends AbstractController
             foreach ($request->request->get('custom') as $key => $value) {
                 $additional = $entityManager->getRepository(AdditionalFields::class)
                     ->findOneBy(['product'=>$product->getId(),'column_id' => $key]);//find one field by product_id && column_id
+                if(!$additional){
+                    $additional = new AdditionalFields();
+                }
                 $additional->setColumnId($key);
                 $additional->setValue($value);
                 $product->addAdditional($additional);//update additional fields
