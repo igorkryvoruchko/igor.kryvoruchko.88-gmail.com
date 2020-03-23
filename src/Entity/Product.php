@@ -182,8 +182,8 @@ class Product
 
     public function removeAdditionalField(AdditionalFields $additionalField): self
     {
-        if ($this->additionalField->contains($additionalField)) {
-            $this->additionalField->removeElement($additionalField);
+        if ($this->additional->contains($additionalField)) {
+            $this->additional->removeElement($additionalField);
             // set the owning side to null (unless already changed)
             if ($additionalField->getProduct() === $this) {
                 $additionalField->setProduct(null);

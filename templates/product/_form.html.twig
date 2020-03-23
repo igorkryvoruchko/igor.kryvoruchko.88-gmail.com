@@ -1,12 +1,15 @@
 {{ form_start(form) }}
     {{ form_widget(form) }}
+
     {% for column in columns %}
         {% set value = '' %}
+
         {% for additionalItem in additional %}
             {% if additionalItem.columnId == column.id %}
                 {% set value = additionalItem.value %}
             {% endif %}
         {% endfor %}
+
         <div>
             <label for="custom_{{ column.name }}">{{ column.name }}</label>
             <input type="text" name="custom[{{ column.id }}]" id="custom_{{ column.name }}" value="{{ value }}">

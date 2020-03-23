@@ -71,6 +71,7 @@ class ProductController extends AbstractController
             'product' => $product,
             'form' => $form->createView(),
             'columns' => $columns->findAll(),
+            'additional' => [],
         ]);
     }
 
@@ -96,8 +97,17 @@ class ProductController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
+            $entityManager = $this->getDoctrine()->getManager();
+            foreach ($request->request->get('custom') as $key => $value) {
+                $additional = $entityManager->getRepository(AdditionalFields::class)
+                    ->findOneBy(['product'=>$product->getId(),'column_id' => $key]);//find one field by product_id && column_id
+                $additional->setColumnId($key);
+                $additional->setValue($value);
+                $product->addAdditional($additional);//update additional fields
+                $entityManager->persist($additional);
+            }
+            $entityManager->persist($product);
+            $entityManager->flush();
 
             return $this->redirectToRoute('product_index');
         }
@@ -119,6 +129,7 @@ class ProductController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($product);
             $entityManager->flush();
+            // additional fields deleting to.
         }
 
         return $this->redirectToRoute('product_index');
