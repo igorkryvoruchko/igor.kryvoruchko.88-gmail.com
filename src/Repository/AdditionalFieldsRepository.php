@@ -36,15 +36,15 @@ class AdditionalFieldsRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?AdditionalFields
+
+    public function deleteAllByColumn($column_id)
     {
         return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
+            ->where('a.column_id = :col')
+            ->setParameter('col', $column_id)
+            ->delete()
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->execute();
     }
-    */
+
 }

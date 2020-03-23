@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\AdditionalFields;
 use App\Entity\Columns;
 use App\Form\ColumnsType;
+use App\Repository\AdditionalFieldsRepository;
 use App\Repository\ColumnsRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -103,8 +105,11 @@ class ColumnsController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$column->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->getRepository(AdditionalFields::class)->deleteAllByColumn($column->getId());
             $entityManager->remove($column);
             $entityManager->flush();
+
+
         }
 
         return $this->redirectToRoute('columns_index');
